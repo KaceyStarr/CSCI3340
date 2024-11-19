@@ -1,39 +1,118 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<div class="col-md-6 offset-md-3 mt-5">
+<style>
+  /* Wrapper Styles */
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f5f7fa;
+    font-family: 'Arial', sans-serif;
+  }
+
+  /* Login Form Styles */
+  .login {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .login .title {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 20px;
+  }
+
+  .login input[type="text"],
+  .login input[type="password"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+  }
+
+  .login input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 3px #007bff;
+  }
+
+  .login button {
+    width: 100%;
+    padding: 12px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+
+  .login button:hover {
+    background-color: #0056b3;
+  }
+
+  .login a {
+    display: block;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9em;
+  }
+
+  .login a:hover {
+    text-decoration: underline;
+  }
+
+  /* Footer Styles */
+  footer {
+    margin-top: 20px;
+    font-size: 0.9em;
+  }
+
+  footer a {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="wrapper">
 
   {% if user.is_authenticated %}
-    <div class="text-center">
-      <h1 class="display-4">Welcome, {{ user.username }}</h1>
-      <p class="lead">You are already logged in.</p>
-    </div>
-
+    <h1>Hello, {{ user.username }}!</h1>
   {% else %}
-    <div class="card shadow-sm p-4">
-      <h2 class="text-center mb-4">Login</h2>
-      <form method="POST" action="{% url 'home' %}">
-        {% csrf_token %}
-
-        <!-- Username input -->
-        <div class="form-group mb-3">
-          <label for="username" class="form-label">Username</label>
-          <input type="text" class="form-control" id="username" name="username" required placeholder="Enter your username">
-        </div>
-
-        <!-- Password input -->
-        <div class="form-group mb-4">
-          <label for="password" class="form-label">Password</label>
-          <input type="password" class="form-control" id="password" name="password" required placeholder="Enter your password">
-        </div>
-
-        <!-- Submit button -->
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
-        </div>
-      </form>
-    </div>
+    <form class="login" method="POST" action="{% url 'home' %}">
+      {% csrf_token %}
+      <p class="title">Log in</p>
+      <input type="text" name="username" placeholder="Username" required autofocus />
+      
+      <input type="password" name="password" placeholder="Password" required />
+      
+      <a href="#">Forgot your password?</a>
+      
+      <button type="submit">
+        <span class="state">Log in</span>
+      </button>
+    </form>
   {% endif %}
+  
+  <footer>
+    <a target="_blank" href="http://boudra.me/">boudra.me</a>
+  </footer>
 
 </div>
 

@@ -1,25 +1,89 @@
-
-
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container-fluid">
-    <div class="navbar-header mx-auto">
-    <a class="navbar-brand" href="{% url 'home' %}">FocusFlow</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse justify-content-end" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
-        <a class="nav-link active" aria-current="page" href="#">Home</a>
-        <a class="nav-link disabled" aria-disabled="true">Website3</a>
-        {% if user.is_authenticated %}
+  <div class="container-fluid position-relative">
+    <!-- Center the brand name -->
+    <div class="mx-auto position-absolute start-50 translate-middle" style="top: 30px;">
+      <a class="navbar-brand text-center" href="{% url 'home' %}">FocusFlow</a>
+    </div>
+
+    <!-- Right-aligned Create Account or Log Out button -->
+    <div class="ms-auto">
+      {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'register' %}">New Account</a>
-        {% endif %}
+          <a class="va-link btn btn-secondary btn-3d" href="{% url 'logout' %}">Log Out</a>
         </li>
-      </div>
+      {% else %}
+        <li class="nav-item">
+          <a class="btn btn-primary btn-3d" href="{% url 'register' %}">Create Account</a>
+        </li>
+      {% endif %}
     </div>
   </div>
 </nav>
+
+<style>
+  /* Navbar adjustments */
+  .navbar {
+    position: relative;
+    padding-top: 15px; /* Optional: Adds space above the navbar */
+  }
+
+  .navbar .container-fluid {
+    display: flex;
+    align-items: center;
+  }
+
+  .navbar-brand {
+    font-size: 2.5em; /* Larger font size */
+    font-weight: 700; /* Bold font */
+    text-transform: uppercase; /* Optional: All caps for emphasis */
+    color: #000; /* Adjust color */
+    letter-spacing: 0.1em; /* Professional spacing */
+  }
+
+  .navbar-brand:hover {
+    text-decoration: none;
+    color: #007bff; /* Hover color */
+  }
+
+  /* 3D Button Styles */
+  .btn-3d {
+    position: relative;
+    background: linear-gradient(145deg, #4caf50, #3e8e41);
+    border: none;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px #2a682d;
+    transition: all 0.2s ease-in-out;
+  }
+
+  .btn-3d:hover {
+    background: linear-gradient(145deg, #3e8e41, #4caf50);
+    box-shadow: 0 6px #265821;
+    transform: translateY(-2px);
+  }
+
+  .btn-3d:active {
+    box-shadow: 0 2px #265821;
+    transform: translateY(2px);
+  }
+
+  /* Secondary button style for Log Out */
+  .btn-secondary {
+    background: linear-gradient(145deg, #d9534f, #c9302c); /* Red gradient for Log Out */
+    box-shadow: 0 4px #a52724;
+  }
+
+  .btn-secondary:hover {
+    background: linear-gradient(145deg, #c9302c, #d9534f);
+    box-shadow: 0 6px #891b18;
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary:active {
+    box-shadow: 0 2px #891b18;
+    transform: translateY(2px);
+  }
+</style>

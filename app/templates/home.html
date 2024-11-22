@@ -9,8 +9,10 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: #f5f7fa;
+    background-color: transparent; /* Transparent to let red shape show */
     font-family: 'Arial', sans-serif;
+    position: relative; /* Ensure it's above the red shape */
+    z-index: 1;
   }
 
   /* Login Form Styles */
@@ -88,7 +90,21 @@
   footer a:hover {
     text-decoration: underline;
   }
+
+  /* Red Shape Styles */
+  .red-shape {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #a94442;
+    clip-path: polygon(0 0, 50% 0, 20% 100%, 0 100%);
+    z-index: -1;
+  }
 </style>
+
+<div class="red-shape"></div> <!-- Red shape background -->
 
 <div class="wrapper">
 

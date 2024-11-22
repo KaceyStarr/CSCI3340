@@ -1,144 +1,136 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<style>
-  .red-shape {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 140%;
-    height: 100vh;
-    background: #a94442;
-    clip-path: polygon(0 0, 50% 0, 20% 100%, 0 100%);
-    z-index: -1;
-    box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.3);
-  }
-</style>
+<div class="container-fluid d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+  <div class="col-md-6 shadow-lg p-4 rounded bg-light">
+    {% if user.is_authenticated %}
+      <h1 class="text-center text-danger mb-4">Welcome, {{ user.username }}!</h1>
+      <div class="mt-4">
+        <h2 class="text-secondary mb-3">Your To-Do List</h2>
+        
+        <!-- Input for adding a task -->
+        <div class="input-group mb-3">
+          <input id="taskInput" type="text" class="form-control" placeholder="Enter a new task" />
+          <button id="addTaskBtn" class="btn btn-primary">Add Task</button>
+        </div>
 
-<div class="col-md-6 offset-md-3 shadow-lg p-4 rounded bg-light">
-  {% if user.is_authenticated %}
-    <h1 class="text-center text-danger mb-4">Welcome, {{ user.username }}!</h1>
-    <div class="mt-4">
-      <h2 class="text-secondary mb-3">Your To-Do List</h2>
-      
-      <!-- Input for adding a task -->
-      <div class="input-group mb-3">
-        <input id="taskInput" type="text" class="form-control" placeholder="Enter a new task" />
-        <button id="addTaskBtn" class="btn btn-primary">Add Task</button>
+        <!-- Task List -->
+        <ul id="taskList" class="list-group">
+          <!-- Tasks will appear here dynamically -->
+        </ul>
       </div>
 
-      <!-- Task List -->
-      <ul id="taskList" class="list-group">
-        <!-- Tasks will appear here dynamically -->
-      </ul>
-    </div>
+      <script>
+        // JavaScript for To-Do List Functionality
+        document.addEventListener("DOMContentLoaded", function () {
+          const taskInput = document.getElementById("taskInput");
+          const addTaskBtn = document.getElementById("addTaskBtn");
+          const taskList = document.getElementById("taskList");
 
-    <script>
-      // JavaScript for To-Do List Functionality
-      document.addEventListener("DOMContentLoaded", function () {
-        const taskInput = document.getElementById("taskInput");
-        const addTaskBtn = document.getElementById("addTaskBtn");
-        const taskList = document.getElementById("taskList");
+          // Add task function
+          addTaskBtn.addEventListener("click", function () {
+            const taskText = taskInput.value.trim();
+            if (taskText === "") return;
 
-        // Add task function
-        addTaskBtn.addEventListener("click", function () {
-          const taskText = taskInput.value.trim();
-          if (taskText === "") return;
+            // Create new task element
+            const li = document.createElement("li");
+            li.className = "list-group-item d-flex justify-content-between align-items-center";
 
-          // Create new task element
-          const li = document.createElement("li");
-          li.className = "list-group-item d-flex justify-content-between align-items-center";
+            // Task text
+            const taskSpan = document.createElement("span");
+            taskSpan.textContent = taskText;
+            taskSpan.style.cursor = "pointer";
+            taskSpan.addEventListener("click", function () {
+              // Make task editable on click
+              const input = document.createElement("input");
+              input.type = "text";
+              input.className = "form-control";
+              input.value = taskSpan.textContent;
+              input.style.width = "70%";
+              input.style.display = "inline-block";
 
-          // Task text
-          const taskSpan = document.createElement("span");
-          taskSpan.textContent = taskText;
-          taskSpan.style.cursor = "pointer";
-          taskSpan.addEventListener("click", function () {
-            // Make task editable on click
-            const input = document.createElement("input");
-            input.type = "text";
-            input.className = "form-control";
-            input.value = taskSpan.textContent;
-            input.style.width = "70%";
-            input.style.display = "inline-block";
+              // Replace span with input
+              li.replaceChild(input, taskSpan);
 
-            // Replace span with input
-            li.replaceChild(input, taskSpan);
+              // Save changes on blur or Enter key
+              const saveTask = () => {
+                taskSpan.textContent = input.value.trim() || taskText;
+                li.replaceChild(taskSpan, input);
+              };
 
-            // Save changes on blur or Enter key
-            const saveTask = () => {
-              taskSpan.textContent = input.value.trim() || taskText;
-              li.replaceChild(taskSpan, input);
-            };
+              input.addEventListener("blur", saveTask);
+              input.addEventListener("keydown", function (e) {
+                if (e.key === "Enter") saveTask();
+              });
 
-            input.addEventListener("blur", saveTask);
-            input.addEventListener("keydown", function (e) {
-              if (e.key === "Enter") saveTask();
+              input.focus();
             });
 
-            input.focus();
+            li.appendChild(taskSpan);
+
+            // Actions (check and remove)
+            const actionsDiv = document.createElement("div");
+
+            // Check-off button
+            const checkBtn = document.createElement("button");
+            checkBtn.className = "btn btn-sm btn-success me-2";
+            checkBtn.textContent = "✔";
+            checkBtn.addEventListener("click", function () {
+              if (taskSpan.style.textDecoration === "line-through") {
+                taskSpan.style.textDecoration = "none";
+                taskSpan.style.color = "black";
+              } else {
+                taskSpan.style.textDecoration = "line-through";
+                taskSpan.style.color = "gray";
+              }
+            });
+
+            // Remove button
+            const removeBtn = document.createElement("button");
+            removeBtn.className = "btn btn-sm btn-danger";
+            removeBtn.textContent = "🗑";
+            removeBtn.addEventListener("click", function () {
+              taskList.removeChild(li);
+            });
+
+            actionsDiv.appendChild(checkBtn);
+            actionsDiv.appendChild(removeBtn);
+            li.appendChild(actionsDiv);
+
+            // Add task to list
+            taskList.appendChild(li);
+
+            // Clear input field
+            taskInput.value = "";
           });
-
-          li.appendChild(taskSpan);
-
-          // Actions (check and remove)
-          const actionsDiv = document.createElement("div");
-
-          // Check-off button
-          const checkBtn = document.createElement("button");
-          checkBtn.className = "btn btn-sm btn-success me-2";
-          checkBtn.textContent = "✔";
-          checkBtn.addEventListener("click", function () {
-            if (taskSpan.style.textDecoration === "line-through") {
-              taskSpan.style.textDecoration = "none";
-              taskSpan.style.color = "black";
-            } else {
-              taskSpan.style.textDecoration = "line-through";
-              taskSpan.style.color = "gray";
-            }
-          });
-
-          // Remove button
-          const removeBtn = document.createElement("button");
-          removeBtn.className = "btn btn-sm btn-danger";
-          removeBtn.textContent = "🗑";
-          removeBtn.addEventListener("click", function () {
-            taskList.removeChild(li);
-          });
-
-          actionsDiv.appendChild(checkBtn);
-          actionsDiv.appendChild(removeBtn);
-          li.appendChild(actionsDiv);
-
-          // Add task to list
-          taskList.appendChild(li);
-
-          // Clear input field
-          taskInput.value = "";
         });
-      });
-    </script>
-  {% else %}
-    <h1 class="text-center text-primary mb-4">Login</h1>
-    <form method="POST" action="{% url 'home' %}" class="p-3 shadow rounded bg-light">
-      {% csrf_token %}
-      <div class="mb-3">
-        <label for="username" class="form-label">Username</label>
-        <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
-      </div>
-      <div class="mb-3">
-        <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
-      </div>
-      <button type="submit" class="btn btn-primary w-100">Submit</button>
-    </form>
-  {% endif %}
+      </script>
+    {% else %}
+      <h1 class="text-center text-primary mb-4">Login</h1>
+      <form method="POST" action="{% url 'home' %}" class="p-3 shadow rounded bg-light">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="username" class="form-label">Username</label>
+          <input type="text" class="form-control" id="username" name="username" placeholder="Enter your username" required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Submit</button>
+      </form>
+    {% endif %}
+  </div>
 </div>
+
+<!-- The red shape background -->
+<div class="red-shape"></div>
 
 <style>
   body {
     background-color: #f8f9fa;
     font-family: 'Roboto', sans-serif;
+    position: relative; /* Ensure the red shape is positioned correctly relative to the body */
   }
   h1, h2 {
     font-weight: 700;
@@ -172,6 +164,17 @@
   .btn-danger:hover {
     background-color: #c82333;
     border-color: #bd2130;
+  }
+  .red-shape {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 140%;
+    height: 100vh;
+    background: #a94442;
+    clip-path: polygon(0 0, 50% 0, 20% 100%, 0 100%);
+    z-index: -1;
+    box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.3);
   }
 </style>
 

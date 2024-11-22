@@ -1,6 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container mt-5">
+
+<style>
+  .red-shape {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: #a94442;
+    clip-path: polygon(0 0, 50% 0, 20% 100%, 0 100%);
+    z-index: -1;
+  }
+</style>
+
+<div class="red-shape"></div> <!-- Red Shape Background -->
+
+<div class="container mt-5 position-relative" style="z-index: 1;">
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="text-center mb-4">
@@ -31,4 +47,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}

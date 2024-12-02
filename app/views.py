@@ -41,5 +41,5 @@ def register_user(request):
 	else:
 		form = SignUpForm()
 		return render(request,'register.html',{'form':form})
-
+		
 	return render(request,'register.html',{})

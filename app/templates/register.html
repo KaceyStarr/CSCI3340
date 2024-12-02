@@ -31,7 +31,8 @@
                         <ul class="mb-0">
                             {% for field in form %}
                                 {% if field.errors %}
-                                    <li>{{ field.errors|join:", " }}</li>
+                                    {{ field.errors }}
+                                   <!-- <li>{{ field.errors|join:", " }}</li>-->
                                 {% endif %}
                             {% endfor %}
                         </ul>
@@ -41,9 +42,8 @@
 
                 {{ form.as_p }}
 
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-secondary">Sign In</button>
-                </div>
+                <button type="submit" class="btn btn-secondary">Sign In</button>
+    
             </form>
         </div>
     </div>
